@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .result-card.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto bg-white shadow-md rounded-md overflow-hidden">
+        <header class="bg-indigo-500 text-white p-6">
+            <h1 class="text-2xl font-semibold mb-2">Number Analyzer</h1>
+            <p class="text-indigo-200">Enter a number to see its properties.</p>
+        </header>
+
+        <section class="p-6">
+            <div class="mb-4 flex items-center">
+                <label for="numberInput" class="mr-4 font-medium">Enter Number:</label>
+                <input type="number" id="numberInput" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-base py-2 border-gray-300 rounded-md" placeholder="e.g., 42">
+                <button id="analyzeBtn" class="ml-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">Analyze</button>
+                <div id="loadingSpinner" class="ml-4 hidden">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <div id="errorMessage" class="text-red-500 text-sm mt-2 hidden"></div>
+        </section>
+
+        <section id="resultsSection" class="p-6 bg-gray-50 hidden">
+            <h2 class="text-xl font-semibold mb-4">Analysis Results for <span id="numberDisplay" class="font-bold"></span></h2>
+
+            <div id="parityCard" class="bg-white shadow-sm rounded-md p-4 mb-3 result-card">
+                <div class="flex items-center">
+                    <div id="parityIcon" class="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-gray-200 text-gray-800">
+                        </div>
+                    <div>
+                        <p class="font-medium">Parity: <span id="parityResult" class="font-semibold"></span></p>
+                        <p id="parityExplanation" class="text-gray-500 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="primeCard" class="bg-white shadow-sm rounded-md p-4 mb-3 result-card">
+                <div class="flex items-center">
+                    <div id="primeIcon" class="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-gray-200 text-gray-800">
+                        </div>
+                    <div>
+                        <p class="font-medium">Prime Number: <span id="primeResult" class="font-semibold"></span></p>
+                        <p id="primeExplanation" class="text-gray-500 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="squareCard" class="bg-white shadow-sm rounded-md p-4 mb-3 result-card">
+                <div class="flex items-center">
+                    <div id="squareIcon" class="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-gray-200 text-gray-800">
+                        </div>
+                    <div>
+                        <p class="font-medium">Perfect Square: <span id="squareResult" class="font-semibold"></span></p>
+                        <p id="squareExplanation" class="text-gray-500 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="p-6 bg-indigo-100 border-t border-indigo-200">
+            <h2 class="text-lg font-semibold mb-2 text-indigo-700">Implementation Details</h2>
+            <p class="text-indigo-600 text-sm">
+                This frontend provides a self-contained simulation of a number analysis application.  Instead of relying on a remote backend, the core computational logic is executed client-side via JavaScript.
+            </p>
+            <p class="text-indigo-600 text-sm mt-2">
+                Specifically, the determination of number properties is achieved through the following JavaScript functions:
+            </p>
+            <ul class="list-disc ml-5 text-indigo-600 text-sm">
+                <li>
+                    <code>analyzeNumber(number)</code>: This function serves as the orchestrator, mimicking a backend service layer. It invokes the relevant property-checking functions (<code>isNumberPrime()</code>, <code>checkIsPerfectSquare()</code>) and structures the output.  It also employs a <code>Promise</code> and <code>setTimeout</code> to emulate asynchronous backend processing.
+                </li>
+                <li>
+                    <code>isNumberPrime(number)</code>: Implements a primality test with an optimization: it iterates only up to the square root of the input number.  This reflects a common algorithmic efficiency technique.
+                </li>
+                <li>
+                    <code>checkIsPerfectSquare(number)</code>: Leverages <code>Math.sqrt()</code> and compares it against its floored value to ascertain if the number is a perfect square.
+                </li>
+                <li>
+                    <code>findSmallestDivisor(number)</code>:  An auxiliary function used to provide more informative output for non-prime numbers, returning the smallest factor greater than 1.
+                </li>
+            </ul>
+            <p class="text-indigo-600 text-sm mt-2">
+                In a production-grade system, this logic would reside within a backend service, potentially written in Java using Spring Boot.  The frontend would then interact with this service through asynchronous HTTP requests, typically exchanging data in JSON format.
+            </p>
+        </section>
+
+        <footer class="bg-gray-200 p-4 text-center text-gray-600 text-sm">
+            <p>&copy; 2025 Alexander Huseby | Number Analyzer App</p>
+        </footer>
+    </div>
+
+    <script>
+        const numberInput = document.getElementById('numberInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultsSection = document.getElementById('resultsSection');
+        const numberDisplay = document.getElementById('numberDisplay');
+
+        const parityResult = document.getElementById('parityResult');
+        const parityExplanation = document.getElementById('parityExplanation');
+        const parityIcon = document.getElementById('parityIcon');
+
+        const primeResult = document.getElementById('primeResult');
+        const primeExplanation = document.getElementById('primeExplanation');
+        const primeIcon = document.getElementById('primeIcon');
+
+        const squareResult = document.getElementById('squareResult');
+        const squareExplanation = document.getElementById('squareExplanation');
+        const squareIcon = document.getElementById('squareIcon');
+
+        const parityCard = document.getElementById('parityCard');
+        const primeCard = document.getElementById('primeCard');
+        const squareCard = document.getElementById('squareCard');
+
+        function showSpinner() {
+            loadingSpinner.classList.remove('hidden');
+        }
+
+        function hideSpinner() {
+            loadingSpinner.classList.add('hidden');
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+
+        function hideResults() {
+            resultsSection.classList.add('hidden');
+            parityCard.classList.remove('active');
+            primeCard.classList.remove('active');
+            squareCard.classList.remove('active');
+        }
+
+        function init() {
+            analyzeBtn.addEventListener('click', handleAnalyzeClick);
+
+            numberInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleAnalyzeClick();
+                }
+            });
+
+            numberInput.focus();
+        }
+
+        function handleAnalyzeClick() {
+            const numberStr = numberInput.value.trim();
+
+            hideError();
+            hideResults();
+            showSpinner();
+
+            if (!numberStr) {
+                showError("Please enter a number");
+                hideSpinner();
+                return;
+            }
+
+            const number = parseInt(numberStr, 10);
+
+            if (isNaN(number)) {
+                showError("Please enter a valid integer");
+                hideSpinner();
+                return;
+            }
+
+            if (number < 0) {
+                showError("Number cannot be negative");
+                hideSpinner();
+                return;
+            }
+
+            // *** SIMULATED BACKEND CALL - REPLACE WITH ACTUAL FETCH REQUEST ***
+            setTimeout(() => {
+                hideSpinner();
+                const analysisResult = analyzeNumber(number);
+                displayResults(analysisResult);
+            }, 1000); // Simulate network delay
+        }
+
+        function analyzeNumber(num) {
+            const isEven = num % 2 === 0;
+            const isPrime = isNumberPrime(num);
+            const isPerfectSquare = Number.isInteger(Math.sqrt(num));
+            const smallestDivisor = getSmallestDivisor(num);
+
+            return {
+                number: num,
+                isEven: isEven,
+                isPrime: isPrime,
+                isPerfectSquare: isPerfectSquare,
+                parity: isEven ? "Even" : "Odd",
+                smallestDivisor: isPrime ? null : smallestDivisor
+            };
+        }
+
+        function isNumberPrime(num) {
+            if (num <= 1) return false;
+            if (num <= 3) return true;
+            if (num % 2 === 0 || num % 3 === 0) return false;
+            for (let i = 5; i * i <= num; i = i + 6) {
+                if (num % i === 0 || num % (i + 2) === 0) return false;
+            }
+            return true;
+        }
+
+        function getSmallestDivisor(num) {
+            if (num <= 1) return 1;
+            for (let i = 2; i * i <= num; i++) {
+                if (num % i === 0) return i;
+            }
+            return num;
+        }
+
+        function displayResults(data) {
+            numberDisplay.textContent = data.number;
+
+            parityResult.textContent = data.parity;
+            parityExplanation.textContent = data.isEven ?
+                `${data.number} is divisible by 2` :
+                `${data.number} leaves a remainder when divided by 2`;
+
+            parityIcon.className = "w-10 h-10 rounded-full flex items-center justify-center mr-3 " +
+                (data.isEven ? "bg-blue-200 text-blue-800" : "bg-yellow-200 text-yellow-800");
+            parityIcon.innerHTML = data.isEven ?
+                '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' :
+                '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+
+            primeResult.textContent = data.isPrime ? "Yes" : "No";
+
+            if (data.isPrime) {
+                primeExplanation.textContent = `${data.number} is only divisible by 1 and itself`;
+                primeIcon.className = "w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-purple-200 text-purple-800";
+                primeIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+            } else {
+                primeExplanation.textContent = `${data.number} is divisible by ${data.smallestDivisor}`;
+                primeIcon.className = "w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-red-200 text-red-800";
+                primeIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+            }
+
+            squareResult.textContent = data.isPerfectSquare ? "Yes" : "No";
+
+            if (data.isPerfectSquare) {
+                const sqrt = Math.sqrt(data.number);
+                squareExplanation.textContent = `${data.number} = ${sqrt} × ${sqrt}`;
+                squareIcon.className = "w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-green-200 text-green-800";
+                squareIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+            } else {
+                const sqrt = Math.sqrt(data.number);
+                squareExplanation.textContent = `√${data.number} ≈ ${sqrt.toFixed(2)} (not an integer)`;
+                squareIcon.className = "w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-red-200 text-red-800";
+                squareIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+            }
+
+            resultsSection.classList.remove('hidden');
+
+            setTimeout(() => {
+                parityCard.classList.add('active');
+                setTimeout(() => {
+                    primeCard.classList.add('active');
+                    setTimeout(() => {
+                        squareCard.classList.add('active');
+                    }, 100);
+                }, 100);
+            }, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
